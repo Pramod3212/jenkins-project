@@ -245,7 +245,8 @@ pipeline {
                 // Add your deployment steps here
             }
         }
- stage('DAST Scan with OWASP ZAP') {
+    }
+        stage('DAST Scan with OWASP ZAP') {
             steps {
                 echo 'Running DAST scan on deployed application...'
                 def exitCode = sh(script: '''
@@ -290,15 +291,39 @@ pipeline {
             }
         }        
     }
-}
- post {
-    always {
+
+    post {
+            always {
         script {
             def buildStatus = currentBuild.currentResult
             def buildUser = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')[0]?.userId ?: 'Github User'
             def buildUrl = env.BUILD_URL
 
             // slack notification
+            slackSend (
+                channel: '#devops-cicd',
+                color: buildStatus == 'SUCCESS' ? 'good' : 'danger',
+                message: """*${buildStatus}:* Job *${env.JOB_NAME}* Build #${env.BUILD_NUMBER} 
+                *Started by:* ${buildUser}
+                *Build URL:* ${buildUrl}"""
+            )
         }
+        emailext (
+            subject: "Build pipeline ${buildStatus}: Job ${env.JOB_NAME} Build #${env.BUILD_NUMBER}",
+            body: """
+                    <p>Maven and DevOps CI-CD Pipeline Build Status: </p>
+                    <p>Build Status: <b>${currentBuild.currentResult}</b></p>
+                    <p>Project: <b>${env.JOB_NAME}</b></p>
+                    <p>Build Number: <b>${env.BUILD_NUMBER}</b></p>
+                    <p>Started by: <b>${buildUser}</b></p>
+                    <p>Build URL: <a href="${buildUrl}">${buildUrl}</a></p>
+                 """,
+                 to: 'ppawar020736@gmail.com',
+                 from: 'ppawar020736@gmail.com',
+                 mimeType: 'text/html',
+                 attachmentsPattern: 'zap_report.html,trivy-file-scan-report.html,trivy-image-scan-report.html,checkstyle.html,dependency-check-report.html'
+                 )
+            }
     }
-}
+            
+    
