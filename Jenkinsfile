@@ -61,7 +61,7 @@ pipeline {
             post {
                 success {
                     echo 'Maven Build Successful'
-                    archiveArtifacts artifacts: '*/target/.jar', fingerprint: true
+                    archiveArtifacts artifacts: '*/target/*.jar', fingerprint: true
                 }
             }
         }
