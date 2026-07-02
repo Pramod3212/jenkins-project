@@ -21,7 +21,7 @@
 		</license>
 	</licenses>
 	<developers>
-		<developer>//name mention	
+		<developer>
 			<id>ppawar</id>
 			<name>Pramod Pawar</name>
 			<email>ppawar020736@gmail.com</email>
@@ -99,7 +99,7 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
+				<groupId>org.apache.maven.plugin</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.13.0</version> <!-- Update to the latest version if needed -->
 				<configuration>
