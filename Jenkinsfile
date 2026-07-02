@@ -1,4 +1,4 @@
-pipeline {
+pipeline {                                                                                                                    
     agent any
 
     tools {
@@ -10,7 +10,7 @@ pipeline {
         SCANNER_HOME = tool 'sonar-scanner'
         NEXUS_VERSION = 'nexus3'
         NEXUS_PROTOCOL = 'http'
-        NEXUS_URL = '16.171.3.213:8081'
+        NEXUS_URL = '51.21.160.84:8081' // Update with your actual Nexus IP
         NEXUS_REPOSITORY = 'devops-repo'
         NEXUS_REPO_ID = 'devops-repo'
         NEXUS_CREDENTIALS_ID = 'nexus-cred'
@@ -18,8 +18,9 @@ pipeline {
 
         registryCredential = 'ecr:ecr.eu-north-1:awscreds'
         registry = 'https://017135960377.dkr.ecr.eu-north-1.amazonaws.com'
-        IMAGE_NAME = '017135960377.dkr.ecr.eu-north-1.amazonaws.com/'
+        IMAGE_NAME = '017135960377.dkr.ecr.eu-north-1.amazonaws.com/' // Added app name placeholder
     }
+    
     stages {
         stage('Clean Workspace') {
             steps {
@@ -34,7 +35,28 @@ pipeline {
         }
         stage('Maven Build') {
             steps {
-                sh 'mvn clean install -DskipTests'
+                script {
+                    // 1. Force Jenkins to resolve the dynamic installation directory path for jdk21 and maven3
+                    def javaHomeDir = tool name: 'jdk21', type: 'jdk'
+                    def mavenHomeDir = tool name: 'maven3', type: 'hudson.tasks.Maven$MavenInstallation'
+                    
+                    // 2. Wrap the execution context with these strict paths overriding everything else
+                    withEnv([
+                        "JAVA_HOME=${javaHomeDir}",
+                        "M2_HOME=${mavenHomeDir}",
+                        "PATH=${javaHomeDir}/bin:${mavenHomeDir}/bin:${env.PATH}"
+                    ]) {
+                        // 3. Print out a debug log to your console to guarantee Java 21 is active
+                        echo "--- VERIFYING PIPELINE EXECUTION ENGINES ---"
+                        sh 'java -version'
+                        sh 'javac -version'
+                        sh 'mvn -version'
+                        echo "--------------------------------------------"
+                        
+                        // 4. Run the build cleanly with your explicit paths
+                        sh 'mvn clean install -DskipTests'
+                    }
+                }
             }
             post {
                 success {
@@ -53,13 +75,13 @@ pipeline {
                 }
                 failure {
                     echo 'Unit Tests Failed'
-                    junit '**/target/surefire-reports/*.xml'
+                    junit '*/target/surefire-reports/.xml'
                 }
             }
         }
         stage('integration test') {
             steps {
-                sh 'mvn verify -DskipUnitTests'
+                sh 'mvn verify'
             }
             post {
                 success {
@@ -67,7 +89,7 @@ pipeline {
                 }
                 failure {
                     echo 'Integration Tests Failed'
-                    junit '**/target/failsafe-reports/*.xml'
+                    junit '*/target/failsafe-reports/.xml'
                 }
             }
         }
@@ -192,7 +214,7 @@ pipeline {
                 }
             }
         }
-        stage('trivy scan image') {
+        stage('trivy scan image') { 
             steps {
                 sh """
                 echo 'Running trivy scan on Docker image : ${env.IMAGE_TAG}'
