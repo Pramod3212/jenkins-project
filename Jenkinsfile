@@ -18,7 +18,7 @@ pipeline {
 
         registryCredential = 'ecr:ecr.eu-north-1:awscreds'
         registry = 'https://017135960377.dkr.ecr.eu-north-1.amazonaws.com'
-        IMAGE_NAME = '017135960377.dkr.ecr.eu-north-1.amazonaws.com/weather-app:${env.BUILD_NUMBER}' // Added app name placeholder
+        IMAGE_NAME = '017135960377.dkr.ecr.eu-north-1.amazonaws.com/weather-app' // Added app name placeholder
     }
     
     stages {
@@ -177,14 +177,18 @@ pipeline {
                 }
             }
         }
-        stage('build docker image') {
+        /*stage('build docker image') {
             steps {
                 script {
                     env.IMAGE_TAG = "${IMAGE_NAME}:${BUILD_NUMBER}"
                     sh "docker rmi -f ${IMAGE_NAME}:latest ${env.IMAGE_TAG} || true "
                     
                     dockerImage = docker.build("${IMAGE_NAME}:latest", '.')
-                    sh "docker tag ${IMAGE_NAME}:latest ${env.IMAGE_TAG}"
+                    sh "docker tag ${IMAGE_NAME}:latest ${env.IMAGE_TAG}"*/
+                    def IMAGE_TAG = env.BUILD_NUMBER
+                    def FULL_IMAGE = "${env.IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker build -t ${FULL_IMAGE} ."
+
                 }
             }
         }
