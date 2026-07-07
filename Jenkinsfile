@@ -185,8 +185,8 @@ pipeline {
                     
                     dockerImage = docker.build("${IMAGE_NAME}:latest", '.')
                     sh "docker tag ${IMAGE_NAME}:latest ${env.IMAGE_TAG}"*/
-                    def IMAGE_TAG = env.BUILD_NUMBER
-                    def FULL_IMAGE = "${env.IMAGE_NAME}:${IMAGE_TAG}"
+                    /*def IMAGE_TAG = env.BUILD_NUMBER*/
+                    env.FULL_IMAGE = "${env.IMAGE_NAME}:${BUILD_NUMBER}"
 
                     sh "docker build -t ${FULL_IMAGE} ."
                 }
