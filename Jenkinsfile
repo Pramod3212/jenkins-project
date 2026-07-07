@@ -12,7 +12,8 @@ pipeline {
         NEXUS_PROTOCOL = 'http'
         NEXUS_URL = '13.60.55.33:8081' // Update with your actual Nexus IP
         NEXUS_REPOSITORY = 'devops-repo'
-        NEXUS_REPO_ID = 'devops-repo'        NEXUS_CREDENTIALS_ID = 'nexus-cred'
+        NEXUS_REPO_ID = 'devops-repo'        
+        NEXUS_CREDENTIALS_ID = 'nexus-cred'
         ARTVERSION = "${env.BUILD_ID}"
 
         registryCredential = 'ecr:ecr.eu-north-1:awscreds'
@@ -188,6 +189,7 @@ pipeline {
                     def IMAGE_TAG = env.BUILD_NUMBER
                     def FULL_IMAGE = "${env.IMAGE_NAME}:${IMAGE_TAG}"
                     sh "docker build -t ${FULL_IMAGE} ."
+                    ${env.IMAGE_TAG}
                 }             
             }
         }
