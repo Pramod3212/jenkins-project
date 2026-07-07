@@ -196,8 +196,9 @@ pipeline {
             steps {
                 sh """
                 echo 'Running trivy scan on Docker image : ${env.FULL_IMAGE}'
-                trivy image -f html -o trivy-image-scan-report.html ${env.FULL_IMAGE}
-                trivy image -f table -o trivy-image-scan-report.txt ${env.FULL_IMAGE}
+                wget -q https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -O html.tpl
+                trivy image --format template --template "@contrib/html.tpl" -o trivy-image-scan-report.html ${env.FULL_IMAGE}
+                trivy image --format table -o trivy-image-scan-report.txt ${env.FULL_IMAGE}
                 """
             }
             post {
