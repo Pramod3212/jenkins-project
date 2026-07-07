@@ -10,10 +10,9 @@ pipeline {
         SCANNER_HOME = tool 'sonar-scanner'
         NEXUS_VERSION = 'nexus3'
         NEXUS_PROTOCOL = 'http'
-        NEXUS_URL = '16.171.20.40:8081' // Update with your actual Nexus IP
+        NEXUS_URL = '13.60.55.33:8081' // Update with your actual Nexus IP
         NEXUS_REPOSITORY = 'devops-repo'
-        NEXUS_REPO_ID = 'devops-repo'
-        NEXUS_CREDENTIALS_ID = 'nexus-cred'
+        NEXUS_REPO_ID = 'devops-repo'        NEXUS_CREDENTIALS_ID = 'nexus-cred'
         ARTVERSION = "${env.BUILD_ID}"
 
         registryCredential = 'ecr:ecr.eu-north-1:awscreds'
