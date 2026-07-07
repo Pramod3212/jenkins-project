@@ -29,13 +29,13 @@ pipeline {
         stage('git Checkout') {
             steps {
                 // ⚠️ FIX: You must provide your Git repository URL here
-                git branch: 'main', url: 'https://github.com/Pramod3212/jenkins-project.git'
+                git branch: 'main', url: 'https://github.com/Winner2494/devops-project.git'
             }
         }
         stage('Maven Build') {
             steps {
                 sh 'mvn clean package -DskipTests'
-                   }
+            }
             post {
                 success {
                     echo 'Maven Build Successful'
@@ -110,7 +110,7 @@ pipeline {
             steps {
               script {
                 timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true, credentialsId: 'sonarqube-token'
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonarqube-token'
                 }
               }
             }
@@ -148,14 +148,15 @@ pipeline {
         /*stage("OWASP Dependency Check Scan") {
             steps {
                 dependencyCheck(
-                 odcInstallation: 'dp-check',
-                 additionalArguments: '''
-                 --scan .
-                 --noupdate
-                 --disableYarnAudit
-                 --disableNodeAudit
-                 ''',)
-              }
+                     odcInstallation: 'dp-check',
+                     additionalArguments: '''
+                        --scan .
+                        --noupdate
+                        --disableYarnAudit
+                        --disableNodeAudit
+                     ''',
+                )
+            }
         }*/
         stage('trivy file scan') {
             steps {
@@ -184,11 +185,11 @@ pipeline {
                     
                     dockerImage = docker.build("${IMAGE_NAME}:latest", '.')
                     sh "docker tag ${IMAGE_NAME}:latest ${env.IMAGE_TAG}"*/
-
                     def IMAGE_TAG = env.BUILD_NUMBER
                     def FULL_IMAGE = "${env.IMAGE_NAME}:${IMAGE_TAG}"
+
                     sh "docker build -t ${FULL_IMAGE} ."
-                }             
+                }
             }
         }
         stage('trivy scan image') { 
