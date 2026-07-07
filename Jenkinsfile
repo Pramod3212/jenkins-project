@@ -178,7 +178,7 @@ pipeline {
             }
         }
         stage('build docker image') {
-            steps {
+           steps {
                 script {
                     /*env.IMAGE_TAG = "${IMAGE_NAME}:${BUILD_NUMBER}"
                     sh "docker rmi -f ${IMAGE_NAME}:latest ${env.IMAGE_TAG} || true "
@@ -195,9 +195,9 @@ pipeline {
         stage('trivy scan image') { 
             steps {
                 sh """
-                echo 'Running trivy scan on Docker image : ${env.IMAGE_NAME}'
-                trivy image -f html -o trivy-image-scan-report.html ${env.IMAGE_NAME}
-                trivy image -f table -o trivy-image-scan-report.txt ${env.IMAGE_NAME}
+                echo 'Running trivy scan on Docker image : ${env.FULL_IMAGE}'
+                trivy image -f html -o trivy-image-scan-report.html ${env.FULL_IMAGE}
+                trivy image -f table -o trivy-image-scan-report.txt ${env.FULL_IMAGE}
                 """
             }
             post {
