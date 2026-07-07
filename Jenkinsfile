@@ -29,7 +29,7 @@ pipeline {
         stage('git Checkout') {
             steps {
                 // ⚠️ FIX: You must provide your Git repository URL here
-                git branch: 'main', url: 'https://github.com/Winner2494/devops-project.git'
+                git branch: 'main', url: 'https://github.com/Pramod3212/jenkins-project.git'
             }
         }
         stage('Maven Build') {
