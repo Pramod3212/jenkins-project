@@ -215,11 +215,10 @@ pipeline {
                 }
             }
         }
-        }
         stage('Upload application image to ECR') {
             steps {
                 script {
-                    docker.withRegistry(registry, registrycredential) {
+                    docker.withRegistry(registry, registryCredential) {
                         dockerImage.push("${BUILD_NUMBER}")
                         sh "docker push ${env.IMAGE_TAG}"
                     }
