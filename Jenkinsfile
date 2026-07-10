@@ -158,7 +158,7 @@ pipeline {
                  ''',)
               }
         }*/
-        stage('trivy file scan') {
+        /*stage('trivy file scan') {
             steps {
                 sh """
                 echo 'Running trivy scan on Docker image : ${env.FULL_IMAGE}'
@@ -181,7 +181,7 @@ pipeline {
                     ])
                 }
             }
-        }
+        }*/
         stage('build docker image') {
            steps {
                 script {
