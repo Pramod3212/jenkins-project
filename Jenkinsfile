@@ -220,16 +220,27 @@ pipeline {
                 }
             }
         }*/
-        stage('Upload application image to ECR') {
+        stage('Login to ECR') {
             steps {
-                script {
-                    docker.withRegistry(registry, registryCredential) {
-                        dockerImage.push("${env.FULL_IMAGE}")
-                        /*sh "docker push ${env.IMAGE_TAG}"*/
-                    }
-                }
+            sh '''
+            aws ecr get-login-password --region eu-north-1 | \
+            docker login \
+            --username AWS \
+            --password-stdin 017135960377.dkr.ecr.eu-north-1.amazonaws.com
+            '''
             }
         }
+        stage('Upload application image to ECR') {
+            steps {
+                sh "docker push ${env.FULL_IMAGE}"
+                /*script {
+                    docker.withRegistry(registry, registryCredential) {
+                        dockerImage.push("${env.FULL_IMAGE}")
+                        sh "docker push ${env.IMAGE_TAG}"
+                    }*/
+                }
+            }
+        
         stage('Deploy to Container') {
             steps {
                 echo 'Deploying application to container...'
