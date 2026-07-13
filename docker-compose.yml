@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   server:
-    build: .
+    image: 017135960377.dkr.ecr.eu-north-1.amazonaws.com/weather-app
     restart: always
     ports:
       - "8081:8080"

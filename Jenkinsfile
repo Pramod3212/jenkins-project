@@ -245,8 +245,10 @@ pipeline {
             steps {
                 echo 'Deploying application to container...'
                 script {
-                    sh "docker rm -f devops-repo || true"
-                    sh "docker run -d --name devops-repo -p 8081:8080 ${env.FULL_IMAGE}"
+                    //sh "docker rm -f devops-repo || true"
+                    /*sh "docker run -d --name devops-repo -p 8081:8080 ${env.FULL_IMAGE}"*/
+                    sh "docker compose down || true"
+                    sh "docker compose up -d"
                 }
             }
         }
