@@ -301,7 +301,9 @@ pipeline {
             script {
                 // ⚠️ FIX: Instantiated variables here so both notifications can access them globally
                 def buildStatus = currentBuild.currentResult
-                def buildUser = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')[0]?.userId ?: 'Git Trigger'
+                /*def buildUser = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')[0]?.userId ?: 'Git Trigger'*/
+                def causes = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')
+                def buildUser = causes ? causes[0].userId : 'Git Trigger'
                 def buildUrl = env.BUILD_URL
 
                 // Slack Notification
@@ -312,6 +314,7 @@ pipeline {
                 )*/
 
                 // Email Notification placed inside script block to easily read scope variables safely
+            try{
                 emailext (
                     subject: "Build Pipeline ${buildStatus}: Job ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
                     body: """
@@ -325,8 +328,11 @@ pipeline {
                     to: 'ppawar020736@gmail.com',
                     from: 'ppawar020736@gmail.com',
                     mimeType: 'text/html',
-                    attachmentsPattern: 'zap_report.html,trivy-file-scan-report.html,trivy-image-scan-report.html,target/site/checkstyle.html,target/dependency-check-report/dependency-check-report.html'
-                )        
+                    attachmentsPattern: 'zap_report.html,trivy-file-scan-report.html,trivy-image-scan-report.html,target/site/checkstyle.html'
+                )
+            } catch (Exception e) {
+               echo "Email notification failed: ${e.getMessage()}"
+             }        
             }
         }
     } 
