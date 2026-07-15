@@ -262,7 +262,7 @@ pipeline {
                     def exitCode = sh(script: '''
                         docker run --rm --user root --network host -v \$(pwd):/zap/wrk:rw \
                         ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
-                        -t http://51.20.188.20:8081\dashboard
+                        -t http://51.20.188.20:8081\dashboard \
                         -r zap_report.html -J zap_report.json || true
                     ''', returnStatus: true)
 
