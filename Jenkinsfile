@@ -245,10 +245,12 @@ pipeline {
             steps {
                 echo 'Deploying application to container...'
                 script {
+                    withEnv(["FULL_IMAGE=${env.FULL_IMAGE}"]){
                     //sh "docker rm -f devops-repo || true"
                     /*sh "docker run -d --name devops-repo -p 8081:8080 ${env.FULL_IMAGE}"*/
                     sh "docker compose down || true"
                     sh "docker compose up -d"
+                    }
                 }
             }
         }
@@ -260,7 +262,7 @@ pipeline {
                     def exitCode = sh(script: '''
                         docker run --rm --user root --network host -v \$(pwd):/zap/wrk:rw \
                         ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
-                        -t http://localhost:8081 \
+                        -t http://51.20.188.20:8081\dashboard
                         -r zap_report.html -J zap_report.json || true
                     ''', returnStatus: true)
 
