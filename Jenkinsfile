@@ -18,7 +18,7 @@ pipeline {
 
         registryCredential = 'ecr:ecr.eu-north-1:awscreds'
         registry = 'https://017135960377.dkr.ecr.eu-north-1.amazonaws.com'
-        IMAGE_NAME = '017135960377.dkr.ecr.eu-north-1.amazonaws.com/weather-app' // Added app name placeholder
+        IMAGE_NAME = '017135960377.dkr.ecr.eu-north-1.amazonaws.com' // Added app name placeholder
     }
     
     stages {
