@@ -54,7 +54,7 @@ pipeline {
                 }
                 failure {
                     echo 'Unit Tests Failed'
-                    junit '**/target/surefire-reports/*.xml'
+                    junit '**/target/*.xml'
                 }
             }
         }
@@ -240,7 +240,6 @@ pipeline {
                     }*/
                 }
             }
-        
         stage('Deploy to Container') {
             steps {
                 echo 'Deploying application to container...'
