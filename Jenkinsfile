@@ -101,7 +101,7 @@ pipeline {
                         -Dsonar.java.binaries=target/classes \
                         -Dsonar.junit.reportPaths=target/surefire-reports \
                         -Dsonar.jacoco.reportPaths=target/jacoco.exec \
-                        -Dsonar.java.checkstyle.reportPaths=target/site/checkstyle.xml \
+                        -Dsonar.java.checkstyle.reportPaths=target/reports/checkstyle.xml \
                         -Dsonar.exclusions=target/**,.git/** \
                     """    
                 }
@@ -328,7 +328,7 @@ pipeline {
                     to: 'ppawar020736@gmail.com',
                     from: 'ppawar020736@gmail.com',
                     mimeType: 'text/html',
-                    attachmentsPattern: 'zap_report.html,trivy-file-scan-report.html,trivy-image-scan-report.html,target/site/checkstyle.html'
+                    attachmentsPattern: 'zap_report.html,trivy-file-scan-report.html,trivy-image-scan-report.html,target/reports/checkstyle.html'
                 )
             } catch (Exception e) {
                echo "Email notification failed: ${e.getMessage()}"
