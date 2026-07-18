@@ -99,7 +99,7 @@ pipeline {
                         -Dsonar.sources=src/main/java \
                         -Dsonar.tests=src/test/java \
                         -Dsonar.java.binaries=target/classes \
-                        -Dsonar.junit.reportPaths=target/reports \
+                        -Dsonar.junit.reportPaths=target/ \
                         -Dsonar.jacoco.reportPaths=target/jacoco.exec \
                         -Dsonar.java.checkstyle.reportPaths=target/reports/checkstyle.xml \
                         -Dsonar.exclusions=target/**,.git/** \
@@ -146,18 +146,21 @@ pipeline {
                 }
             }
         }
-        stage("OWASP Dependency Check Scan") {
-            steps {
-                dependencyCheck(
-                 odcInstallation: 'dp-check',
-                 additionalArguments: '''
-                 --scan .
-                 --noupdate
-                 --disableYarnAudit
-                 --disableNodeAudit
-                 ''',)
-              }
-        }
+        stage('OWASP Dependency Check Scan') {
+    steps {
+        dependencyCheck(
+            odcInstallation: 'dp-check',
+            additionalArguments: '--scan . --format ALL'
+        )
+    }
+    post {
+        always {
+            dependencyCheckPublisher(
+                pattern: '**/dependency-check-report.html'
+            )
+         }
+       }
+    }
         stage('trivy file scan') {
             steps {
                 sh 'trivy fs --format template --template "@/opt/trivy/html.tpl" -o trivy-file-scan-report.html .'
@@ -322,7 +325,7 @@ pipeline {
                     to: 'ppawar020736@gmail.com',
                     from: 'ppawar020736@gmail.com',
                     mimeType: 'text/html',
-                    attachmentsPattern: 'zap_report.html,trivy-file-scan-report.html,trivy-image-scan-report.html,target/reports/checkstyle.html'
+                    attachmentsPattern: 'zap_report.html,trivy-file-scan-report.html,trivy-image-scan-report.html,target/reports/checkstyle.html,dependency-check-reports.html'
                 )
             } catch (Exception e) {
                echo "Email notification failed: ${e.getMessage()}"
