@@ -10,7 +10,7 @@ pipeline {
         SCANNER_HOME = tool 'sonar-scanner'
         NEXUS_VERSION = 'nexus3'
         NEXUS_PROTOCOL = 'http'
-        NEXUS_URL = '16.171.161.177:8081' // Update with your actual Nexus IP
+        NEXUS_URL = '13.53.132.40:8081' // Update with your actual Nexus IP
         NEXUS_REPOSITORY = 'devops-repo'
         NEXUS_REPO_ID = 'devops-repo'        
         NEXUS_CREDENTIALS_ID = 'nexus-cred'
@@ -158,14 +158,9 @@ pipeline {
                  ''',)
               }
         }*/
-        /*stage('trivy file scan') {
+        stage('trivy file scan') {
             steps {
-                sh """
-                echo 'Running trivy scan on Docker image : ${env.FULL_IMAGE}'
-                mkdir -p $WORKSPACE/.trivy-cache 
-                trivy image --scanner vuln --skip-java-db-update --cache-dir $WORKSPACE/.trivy-cache --format template "@/opt/trivy/html.tpl" -o trivy-image-scan-report.html ${env.FULL_IMAGE}
-                trivy image  --cache-dir $WORKSPACE/.trivy-cache --format table -o trivy-image-scan-report.txt ${env.FULL_IMAGE}
-                """
+                sh 'trivy fs --format template --template "@/opt/trivy/html.tpl" -o trivy-file-scan-report.html .'
             }
             post {
                 success {
@@ -181,7 +176,7 @@ pipeline {
                     ])
                 }
             }
-        }*/
+        }
         stage('build docker image') {
            steps {
                 script {
