@@ -146,7 +146,7 @@ pipeline {
                 }
             }
         }
-        /*stage("OWASP Dependency Check Scan") {
+        stage("OWASP Dependency Check Scan") {
             steps {
                 dependencyCheck(
                  odcInstallation: 'dp-check',
@@ -157,7 +157,7 @@ pipeline {
                  --disableNodeAudit
                  ''',)
               }
-        }*/
+        }
         stage('trivy file scan') {
             steps {
                 sh 'trivy fs --format template --template "@/opt/trivy/html.tpl" -o trivy-file-scan-report.html .'
