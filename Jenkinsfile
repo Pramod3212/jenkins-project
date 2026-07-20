@@ -327,7 +327,7 @@ pipeline {
                     to: 'ppawar020736@gmail.com',
                     from: 'ppawar020736@gmail.com',
                     mimeType: 'text/html',
-                    attachmentsPattern: 'zap_report.html,trivy-file-scan-report.html,trivy-image-scan-report.html,target/reports/checkstyle.html,dependency-check-reports.html'
+                    attachmentsPattern: 'zap_report.html,trivy-file-scan-report.html,trivy-image-scan-report.html,dependency-check-report.html,target/reports/checkstyle.html'
                 )
             } catch (Exception e) {
                echo "Email notification failed: ${e.getMessage()}"
