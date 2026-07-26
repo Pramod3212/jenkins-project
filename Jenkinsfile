@@ -10,7 +10,7 @@ pipeline {
         SCANNER_HOME = tool 'sonar-scanner'
         NEXUS_VERSION = 'nexus3'
         NEXUS_PROTOCOL = 'http'
-        NEXUS_URL = '13.60.188.14:8081' // Update with your actual Nexus IP
+        NEXUS_URL = '16.171.165.6:8081' // Update with your actual Nexus IP
         NEXUS_REPOSITORY = 'devops-repo'
         NEXUS_REPO_ID = 'devops-repo'        
         NEXUS_CREDENTIALS_ID = 'nexus-cred'
@@ -261,7 +261,7 @@ pipeline {
                     def exitCode = sh(script: '''
                         docker run --rm --user root --network host -v \$(pwd):/zap/wrk:rw \
                         ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
-                        -t http://13.60.228.19:8081/dashboard \
+                        -t http://http://16.171.165.6:8081/dashboard \
                         -r zap_report.html -J zap_report.json || true
                     ''', returnStatus: true)
 
