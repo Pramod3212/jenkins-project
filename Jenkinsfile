@@ -197,7 +197,7 @@ pipeline {
                 }
             }
         }
-        /*stage('trivy scan image') {
+        stage('trivy scan image') {
             steps {
                 sh """
                 echo 'Running trivy scan on Docker image : ${env.FULL_IMAGE}'
@@ -219,7 +219,7 @@ pipeline {
                     ])
                 }
             }
-        }*/
+        }
         stage('Login to ECR') {
             steps {
             sh '''
