@@ -197,11 +197,10 @@ pipeline {
                 }
             }
         }
-        stage('trivy scan image') {
-            steps {
+         steps {
                 sh """
                 echo "Running trivy scan on Docker image : ${env.FULL_IMAGE}"
-                trivy image --format template --template "@html.tpl" -o trivy-image-scan-report.html \ ${env.FULL_IMAGE}
+                trivy image --format template --template "@/opt/trivy/html.tpl" -o trivy-image-scan-report.html ${env.FULL_IMAGE}
                 trivy image --format table -o trivy-image-scan-report.txt ${env.FULL_IMAGE}
                 """
             }
